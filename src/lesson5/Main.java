@@ -12,7 +12,7 @@ public class Main {
             arr[i] = 1;
         }
         System.out.println("Время работы с целым массивом: "+workWithFullArr(arr));
-        System.out.println("Время работы с двумя половинками: "+workWithHalfArrs(arr));
+        System.out.println("Время работы с двумя половинками : "+workWithHalfArrs(arr));
 
 
     }
@@ -31,6 +31,7 @@ public class Main {
         System.arraycopy(arrs,halfSize,secondHalfArr,0,halfSize);
         Thread workWithFirstArr = new Thread(()->{
             for (int i = 0; i < firstHalfArr.length; i++) {
+
                 firstHalfArr[i]= (float)(firstHalfArr[i] * Math.sin(0.2f + i / 5) * Math.cos(0.2f + i / 5) * Math.cos(0.4f + i / 2));
             }
         });
@@ -39,11 +40,23 @@ public class Main {
                 secondHalfArr[i]= (float)(secondHalfArr[i] * Math.sin(0.2f + i / 5) * Math.cos(0.2f + i / 5) * Math.cos(0.4f + i / 2));
             }
         });
-        workWithFirstArr.start();
-        workWithSecondArr.start();
+        try {
+
+            workWithFirstArr.start();
+
+            workWithSecondArr.start();
+            workWithFirstArr.join();
+            workWithSecondArr.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         System.arraycopy(firstHalfArr,0,arr,0,halfSize);
         System.arraycopy(secondHalfArr,0,arr,halfSize,halfSize);
+
+
         return System.currentTimeMillis()-time;
+
     }
 
 }
